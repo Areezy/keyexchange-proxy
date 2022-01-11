@@ -6,6 +6,9 @@ const axios = require("axios");
 /* POST send key encapsulation param with certificate. */
 router.post("/", async (req, res) => {
   const { accessToken } = req.body;
+
+  if (!accessToken) return res.status(400).send("No Access Token");
+  
   const KEMAlgorithm = new KeyEncapsulation("Kyber512");
   const signatureAlgorithm = new Signature("Dilithium2");
 
@@ -29,28 +32,16 @@ router.post("/", async (req, res) => {
       }
     );
 
-    let { ciphertext, sharedSecret } = response.data;
+    let { ciphertext } = response.data;
 
     ciphertext = Buffer.from(JSON.parse(ciphertext).data);
-    sharedSecret = Buffer.from(JSON.parse(sharedSecret).data);
 
     const secret = KEMAlgorithm.decapsulateSecret(ciphertext);
 
-    if (Buffer.compare(secret, sharedSecret) === 0) {
-      console.log("same secret");
-      res.status(200).send(JSON.stringify(secret));
-    } else {
-      console.log("not same");
-      res.status(501).send({ status: false });
-    }
+    res.status(200).send(JSON.stringify(secret));
 
-    // if (response.status === 200) {
-    //   res.status(200).send(JSON.stringify(sharedSecret));
-    // } else {
-    //   res.status(501).send({ status: false });
-    // }
   } catch (error) {
-    res.status(501).send({ status: false });
+    res.status(401).send({ status: false });
     console.log(error.message);
   }
 });
