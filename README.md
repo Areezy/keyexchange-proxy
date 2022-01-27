@@ -1,4 +1,4 @@
-# Key Exchange Proxy
+# Key Exchange Proxy Server
 This is a proxy server which performs a key exchange with [the main server](https://github.com/Areezy/password-manager-server) on behalf of [the client.](https://github.com/Areezy/password-manager)
 
 It generates the shared secret and sends it to the client. 
