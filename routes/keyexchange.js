@@ -43,7 +43,7 @@ router.post("/", async (req, res) => {
 
   try {
     let response = await axios.post(
-      "http://localhost:3000/api/keyexchange",
+      `${process.env.SERVER_ADDRESS}/api/keyexchange`,
       {
         signature: JSON.stringify(signature),
         signaturePublicKey: JSON.stringify(signaturePublicKey),
